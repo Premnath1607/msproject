@@ -12,7 +12,6 @@ import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 
-import com.tpn.ticket.controller.TicketController;
 import com.tpn.ticket.entity.Passenger;
 import com.tpn.ticket.entity.Ticket;
 import com.tpn.ticket.entity.TicketRequestDto;
@@ -24,7 +23,6 @@ import com.tpn.ticket.feignclient.UserClient;
 import com.tpn.ticket.repositry.TicketRepositry;
 import com.tpn.ticket.service.TicketService;
 
-
 /**
  * 
  * @author Premnath T
@@ -33,7 +31,7 @@ import com.tpn.ticket.service.TicketService;
 @Service
 public class TicketServiceImpl implements TicketService {
 
-	private static final Logger logger = LogManager.getLogger(TicketController.class);
+	private static final Logger logger = LogManager.getLogger(TicketServiceImpl.class);
 
 	@Autowired
 	UserClient userClient;
@@ -56,18 +54,18 @@ public class TicketServiceImpl implements TicketService {
 		logger.info("createTicket method starts");
 		long userId = userClient.findUserId(username);
 		Ticket ticket = new Ticket();
-		TrainTicketDto trainTicketDto=new TrainTicketDto();
-		int seatCount=0;
+		TrainTicketDto trainTicketDto;
+		int seatCount = 0;
 		BeanUtils.copyProperties(ticketDto, ticket);
 		ticketDto.getPassenger().stream().forEach(data -> {
 			Passenger passenger = new Passenger();
 			BeanUtils.copyProperties(data, passenger);
 			ticket.getPassenger().add(passenger);
 		});
-		ticket.setBookedUserId(userId);		
-		trainTicketDto=formSeatsCheckDto(ticketDto);
-		seatCount=trainClient.getCurrentSeatsCount(trainTicketDto);
-		if(seatCount==0 || seatCount<ticketDto.getNumOfSeats()) {
+		ticket.setBookedUserId(userId);
+		trainTicketDto = formSeatsCheckDto(ticketDto);
+		seatCount = trainClient.getCurrentSeatsCount(trainTicketDto);
+		if (seatCount == 0 || seatCount < ticketDto.getNumOfSeats()) {
 			throw new CustomException("Seats not available on this train");
 		}
 		ticket.setTicketStatus("BOOKED");
@@ -77,23 +75,23 @@ public class TicketServiceImpl implements TicketService {
 		trainStatusDto.setNoOfSeats(ticketDto.getNumOfSeats());
 		trainStatusDto.setTrainNumber(ticketDto.getTrainNumber());
 		CircuitBreaker circuitBreaker = circuitBreakerFactory.create("circuitbreaker");
-		circuitBreaker.run(() -> trainClient.updateTrainSeatStatus(trainStatusDto),
-				throwable -> getCommonMsg(throwable));
-		Ticket resultTicket=ticketRepositry.save(ticket);
-		TicketStatusDto resultTicketRequestDto=new TicketStatusDto();
+		circuitBreaker.run(() -> trainClient.updateTrainSeatStatus(trainStatusDto), throwable -> getCommonMsg());
+		Ticket resultTicket = ticketRepositry.save(ticket);
+		TicketStatusDto resultTicketRequestDto = new TicketStatusDto();
 		BeanUtils.copyProperties(resultTicket, resultTicketRequestDto);
 		logger.info("createTicket method ends");
 		return resultTicketRequestDto;
 	}
-	
+
 	/**
 	 * formSeatsCheckDto method used to form dto for seats count check
+	 * 
 	 * @param ticketDto
 	 * @return TrainTicketDto
 	 */
 	private TrainTicketDto formSeatsCheckDto(TicketRequestDto ticketDto) {
-		TrainTicketDto trainTicketDto=new TrainTicketDto();
-		int trainNumber=ticketDto.getTrainNumber();
+		TrainTicketDto trainTicketDto = new TrainTicketDto();
+		int trainNumber = ticketDto.getTrainNumber();
 		Date deptDate = new Date(ticketDto.getDepartDate().getTime());
 		trainTicketDto.setDeptDate(deptDate);
 		trainTicketDto.setTrainNumber(trainNumber);
@@ -106,7 +104,7 @@ public class TicketServiceImpl implements TicketService {
 	 * @param throwable
 	 * @return Object
 	 */
-	public Object getCommonMsg(Throwable throwable) {
+	public Object getCommonMsg() {
 		logger.error("Train service is down...");
 		return "Train-service is down, Please try after some time.";
 	}

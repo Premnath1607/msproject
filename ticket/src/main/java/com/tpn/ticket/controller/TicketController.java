@@ -1,5 +1,6 @@
 package com.tpn.ticket.controller;
 
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -21,18 +22,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tpn.ticket.entity.TicketRequestDto;
+import com.tpn.ticket.entity.TicketStatusDto;
 import com.tpn.ticket.service.TicketService;
+
 /**
  * 
  * @author Premnath T
  *
  */
-//@CrossOrigin(origins = "*" , allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/app")
 @Validated
 public class TicketController {
-	
+
 	private static final Logger logger = LogManager.getLogger(TicketController.class);
 
 	@Autowired
@@ -44,14 +47,14 @@ public class TicketController {
 	 * @param username
 	 * @param ticketDto
 	 * @return Object
-	 */	
+	 */
 	@PostMapping("/ticket")
 	@ResponseBody
-	public ResponseEntity<Object> createTicket(
+	public ResponseEntity<TicketStatusDto> createTicket(
 			@Valid @NotEmpty(message = "username is manadotry") @RequestParam String username,
 			@Valid @RequestBody TicketRequestDto ticketDto) {
 		logger.info("createTicket method starts");
-		Object result = ticketService.createTicket(username, ticketDto);
+		TicketStatusDto result = ticketService.createTicket(username, ticketDto);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Description", "New Train Ticket Booking");
 		logger.info("New Train Ticket booked");
@@ -66,20 +69,14 @@ public class TicketController {
 	 */
 	@GetMapping("/history")
 	@ResponseBody
-	public ResponseEntity<Object> getHistory(
+	public ResponseEntity<List<TicketStatusDto>> getHistory(
 			@Valid @NotEmpty(message = "username is manadotry") @RequestParam String username) {
 		logger.info("getHistory method starts");
-		Object result = ticketService.getHistory(username);
+		List<TicketStatusDto> result = ticketService.getHistory(username);
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Description", "Users Transactions");
 		logger.info("user transactions history retrieved");
 		return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(result);
 
 	}
-	
-	@GetMapping("/info")
-	public String getInfo() {
-		return "success";
-	}
-
 }

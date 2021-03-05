@@ -24,7 +24,6 @@ public class PassengerDto {
 	@Max(value = 100, message = "Age should be valid")
 	private int age;
 
-
 	public String getPassengerName() {
 		return passengerName;
 	}

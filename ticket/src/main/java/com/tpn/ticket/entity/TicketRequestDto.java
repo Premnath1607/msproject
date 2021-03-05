@@ -1,12 +1,12 @@
 package com.tpn.ticket.entity;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -20,12 +20,11 @@ import org.hibernate.validator.constraints.Length;
  * @author Premnath T
  *
  */
-public class TicketRequestDto implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class TicketRequestDto{
 
 	@NotNull(message = "Number of Seat is mandatory.")
 	@Min(value=1,message="Seats should not empty")
+	@Max(value=4,message="Seats should not empty")
 	@Digits(integer = 1, fraction = 0, message = "Enter valid Seats Number")
 	private int numOfSeats;
 
@@ -45,7 +44,7 @@ public class TicketRequestDto implements Serializable {
 	private String arrivalStation;
 
 	@NotNull(message = "Passenger Detail is mandatory.")
-	@Size(min = 1 , max=4 , message="Passengers list is empty")
+	@Size(min = 1 , max=4 , message="Passengers list is must be less than 4")
 	private List<@Valid PassengerDto> passenger;
 	
 	@NotNull(message = "Train Number  is mandatory.")
@@ -119,3 +118,4 @@ public class TicketRequestDto implements Serializable {
 	}
 
 }
+

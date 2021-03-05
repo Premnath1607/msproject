@@ -17,7 +17,7 @@ public interface TrainClient {
 
 	@PostMapping("/train")
 	ResponseEntity<String> updateTrainSeatStatus(@RequestBody TrainTicketDto trainTicketDto);
-	
+
 	@PostMapping("/seats")
 	int getCurrentSeatsCount(@RequestBody TrainTicketDto trainTicketDto);
 

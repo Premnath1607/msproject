@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import feign.FeignException;
 
-
 /**
  * 
- * @author Premnath T 
+ * @author Premnath T
  * 
- * ControllerException class used to handle global exception and custom exceptions
+ *         ControllerException class used to handle global exception and custom
+ *         exceptions
  */
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -45,11 +45,9 @@ public class ControllerExceptionHandler {
 				.forEach(error -> errors.put(String.valueOf(error.getField()), error.getDefaultMessage()));
 		return errors;
 	}
-	
-	
+
 	/**
-	 * handleMethodArgumentNotValid method used to handle read validation
-	 * exception
+	 * handleMethodArgumentNotValid method used to handle read validation exception
 	 * 
 	 * @param readException
 	 * @return
@@ -59,11 +57,11 @@ public class ControllerExceptionHandler {
 	public ResponseEntity<ExceptionResponse> handleInvalidFormat(HttpMessageNotReadableException readException) {
 		ExceptionResponse response = new ExceptionResponse();
 		response.setErrorCode("FORMAT_ERROR");
-		response.setErrorMessage(readException.getRootCause().getMessage());
+		response.setErrorMessage(readException.getMessage());
 		response.setTimestamp(LocalDateTime.now());
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-	
+
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(FeignException.class)
 	public ResponseEntity<ExceptionResponse> handleFeignException(FeignException readException) {
@@ -74,9 +72,10 @@ public class ControllerExceptionHandler {
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
-
 	/**
-	 * handleConstraintViolation method used to handle constraint validation exceptions
+	 * handleConstraintViolation method used to handle constraint validation
+	 * exceptions
+	 * 
 	 * @param constraintException
 	 * @return
 	 */
@@ -112,9 +111,10 @@ public class ControllerExceptionHandler {
 		logger.error("Exception Detail : ", exception);
 		return ResponseEntity.status(status).body(exception.getMessage());
 	}
-	
+
 	/**
 	 * customException method used to handle custom exceptions of service class
+	 * 
 	 * @param customException
 	 * @return
 	 */
@@ -142,6 +142,5 @@ public class ControllerExceptionHandler {
 		response.setTimestamp(LocalDateTime.now());
 		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
-
 
 }
