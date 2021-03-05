@@ -24,7 +24,7 @@ public class TicketRequestDto{
 
 	@NotNull(message = "Number of Seat is mandatory.")
 	@Min(value=1,message="Seats should not empty")
-	@Max(value=4,message="Seats should not empty")
+	@Max(value=4,message="Seats should not more than 4")
 	@Digits(integer = 1, fraction = 0, message = "Enter valid Seats Number")
 	private int numOfSeats;
 
@@ -36,11 +36,11 @@ public class TicketRequestDto{
 	private Date departDate;
 
 	@NotEmpty(message = "Departure Station is mandatory.")
-	@Length(min = 3, message = "Departure Station is not Valid")
+	@Length(min = 3, max = 3, message = "Departure Station is not Valid")
 	private String departStation;
 
 	@NotEmpty(message = "Arrival Station is mandatory.")
-	@Length(min = 3, message = "Arrival station is not valid")
+	@Length(min = 3, max = 3, message = "Arrival Station is not Valid")
 	private String arrivalStation;
 
 	@NotNull(message = "Passenger Detail is mandatory.")
