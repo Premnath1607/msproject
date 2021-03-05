@@ -14,17 +14,16 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
-
 /**
  * 
  * @author Premnath T
  *
  */
-public class TicketRequestDto{
+public class TicketRequestDto {
 
 	@NotNull(message = "Number of Seat is mandatory.")
-	@Min(value=1,message="Seats should not empty")
-	@Max(value=4,message="Seats should not more than 4")
+	@Min(value = 1, message = "Seats should not empty")
+	@Max(value = 4, message = "Seats should not more than 4")
 	@Digits(integer = 1, fraction = 0, message = "Enter valid Seats Number")
 	private int numOfSeats;
 
@@ -32,7 +31,7 @@ public class TicketRequestDto{
 	private double price;
 
 	@NotNull(message = "Departure Date is mandatory.")
-	@Future(message="Departue Date must be in future")
+	@Future(message = "Departue Date must be in future")
 	private Date departDate;
 
 	@NotEmpty(message = "Departure Station is mandatory.")
@@ -44,9 +43,9 @@ public class TicketRequestDto{
 	private String arrivalStation;
 
 	@NotNull(message = "Passenger Detail is mandatory.")
-	@Size(min = 1 , max=4 , message="Passengers list is must be less than 4")
+	@Size(min = 1, max = 4, message = "Passengers list is must be less than 4")
 	private List<@Valid PassengerDto> passenger;
-	
+
 	@NotNull(message = "Train Number  is mandatory.")
 	@Digits(integer = 6, fraction = 0, message = "Enter valid Train Number")
 	private int trainNumber;
@@ -118,4 +117,3 @@ public class TicketRequestDto{
 	}
 
 }
-
