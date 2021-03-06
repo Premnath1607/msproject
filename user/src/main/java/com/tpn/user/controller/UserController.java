@@ -2,6 +2,7 @@ package com.tpn.user.controller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tpn.user.dto.UserDto;
+import com.tpn.user.entity.User;
 import com.tpn.user.service.UserService;
 
 /**
@@ -38,8 +40,10 @@ public class UserController {
 	 * @return Object
 	 */
 	@PostMapping("/user")
-	public UserDto createUser(@RequestBody UserDto user) {
+	public UserDto createUser(@RequestBody UserDto userDto) {
 		logger.info("createUser method starts");
+		User user = new User();
+		BeanUtils.copyProperties(userDto, user);
 		return userService.saveUser(user);
 	}
 

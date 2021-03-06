@@ -27,16 +27,17 @@ public class UserServiceImpl implements UserService {
 	 * saveUser method used to save new user into database
 	 */
 	@Override
-	public UserDto saveUser(UserDto userDto) {
-		User user = new User();
+	public UserDto saveUser(User user) {
+		User newUser = new User();
 		UserDto resultData = new UserDto();
-		BeanUtils.copyProperties(userDto, user);
 		try {
-			user = userDao.save(user);
+			newUser = userDao.save(user);
 		} catch (Exception e) {
 			throw new CustomException("Username/Email already Exists");
 		}
-		BeanUtils.copyProperties(user, resultData);
+		if (!Optional.ofNullable(newUser).isEmpty()) {
+			BeanUtils.copyProperties(newUser, resultData);
+		}
 		return resultData;
 	}
 

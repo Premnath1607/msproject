@@ -3,6 +3,7 @@ package com.tpn.user.service;
 import org.springframework.stereotype.Service;
 
 import com.tpn.user.dto.UserDto;
+import com.tpn.user.entity.User;
 
 /**
  * 
@@ -12,7 +13,7 @@ import com.tpn.user.dto.UserDto;
 @Service
 public interface UserService {
 
-	UserDto saveUser(UserDto user);
+	UserDto saveUser(User user);
 
 	UserDto findByUserName(String username);
 
